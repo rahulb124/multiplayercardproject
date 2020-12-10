@@ -155,7 +155,6 @@ export default class Game extends Phaser .Scene {
             console.log(self.myPlayer);
 
             self.dealer.dealCards();
-            self.dealText.disableInteractive();
 
             self.add.text(75, 75, leftPlayer).setFontSize(14).setFontFamily('Trebuchet MS').setColor('#00ffff');
             self.add.text(1250, 75, rightPlayer).setFontSize(14).setFontFamily('Trebuchet MS').setColor('#00ffff');

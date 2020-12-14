@@ -91,7 +91,7 @@ export default class Game extends Phaser .Scene {
 
     create() {
         let self = this;
-
+        this.cameras.main.setBackgroundColor('#145A32');
         this.myPlayerID = '';
         this.isPlayerA = '';
         this.isPlayerB = '';
@@ -156,10 +156,10 @@ export default class Game extends Phaser .Scene {
 
             self.dealer.dealCards();
 
-            self.add.text(75, 75, leftPlayer).setFontSize(14).setFontFamily('Trebuchet MS').setColor('#00ffff');
-            self.add.text(1250, 75, rightPlayer).setFontSize(14).setFontFamily('Trebuchet MS').setColor('#00ffff');
-            self.add.text(625, 800, bottomPlayer).setFontSize(14).setFontFamily('Trebuchet MS').setColor('#00ffff');
-            self.add.text(625, 10, topPlayer).setFontSize(14).setFontFamily('Trebuchet MS').setColor('#00ffff');
+            self.add.text(75, 75, leftPlayer).setFontSize(20).setFontFamily('Trebuchet MS').setColor('#d5d8dc');
+            self.add.text(1250, 75, rightPlayer).setFontSize(20).setFontFamily('Trebuchet MS').setColor('#d5d8dc');
+            self.add.text(625, 765, bottomPlayer).setFontSize(20).setFontFamily('Trebuchet MS').setColor('#d5d8dc');
+            self.add.text(625, 10, topPlayer).setFontSize(20).setFontFamily('Trebuchet MS').setColor('#d5d8dc');
         });
 
         this.socket.on('sendCards', function (handA, handB, handC, handD) {
@@ -199,7 +199,6 @@ export default class Game extends Phaser .Scene {
        this.socket.on('cardPlayed', function (gameObject, myPlayer) {
            if(myPlayer  !== self.myPlayer){
                let sprite = gameObject.textureKey;
-               let temp = null;
 
                let split = sprite.toString().split("");
                if(myPlayer === 'A'){
@@ -229,32 +228,45 @@ export default class Game extends Phaser .Scene {
            }
        });
 
-        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+       this.endTurn = this.add.text(1000, 360, ['End Turn']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#170202a').setInteractive();
+
+        this.endTurn.on('pointerover', function () {
+            self.endTurn.setColor('#d5d8dc');
+        });
+
+        this.endTurn.on('pointerout', function () {
+            self.endTurn.setColor('#170202a');
+        });
+
+        this.endTurn.on('pointerdown', function () {
+            self.socket.emit('pass_turn');
+       });
+
+       this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
             gameObject.x = dragX;
             gameObject.y = dragY;
-        });
+       });
 
-        this.input.on('dragstart', function (pointer, gameObject) {
+       this.input.on('dragstart', function (pointer, gameObject) {
             gameObject.setTint(0xff69b4);
             self.children.bringToTop(gameObject);
-        });
+       });
 
-        this.input.on('dragend', function (pointer, gameObject, dropped) {
+       this.input.on('dragend', function (pointer, gameObject, dropped) {
             gameObject.setTint();
             if (!dropped) {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
             }
-        });
+       });
 
-        this.input.on('drop', function (pointer, gameObject, dropZone) {
+       this.input.on('drop', function (pointer, gameObject, dropZone) {
             dropZone.data.values.cards++;
             gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
             gameObject.y = dropZone.y;
             gameObject.disableInteractive();
             self.socket.emit('cardPlayed', gameObject, self.myPlayer);
-        });
-
+       });
     }
 
 

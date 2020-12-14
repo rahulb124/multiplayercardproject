@@ -43,7 +43,7 @@ export default class Dealer {
                     let opponentCCard = new Card(scene);
                     opponentCCard.setValue(scene.playerCHand[i].Value);
                     opponentCCard.setSuit(scene.playerCHand[i].Suit);
-                    scene.playerCCards.push(opponentCCard.render(475+(i*30),125, opponentSprite).disableInteractive());
+                    scene.playerCCards.push(opponentCCard.render(475+(i*30),145, opponentSprite).disableInteractive());
 
                     let opponentBCard = new Card(scene);
                     opponentBCard.setValue(scene.playerBHand[i].Value);
@@ -63,7 +63,7 @@ export default class Dealer {
                     let opponentDCard = new Card(scene);
                     opponentDCard.setValue(scene.playerDHand[i].Value);
                     opponentDCard.setSuit(scene.playerDHand[i].Suit);
-                    scene.playerDCards.push(opponentDCard.render(475+(i*30),125, opponentSprite).disableInteractive());
+                    scene.playerDCards.push(opponentDCard.render(475+(i*30),145, opponentSprite).disableInteractive());
 
                     let opponentCCard = new Card(scene);
                     opponentCCard.setValue(scene.playerCHand[i].Value);
@@ -83,7 +83,7 @@ export default class Dealer {
                     let opponentACard = new Card(scene);
                     opponentACard.setValue(scene.playerAHand[i].Value);
                     opponentACard.setSuit(scene.playerAHand[i].Suit);
-                    scene.playerACards.push(opponentACard.render(475+(i*30),125, opponentSprite).disableInteractive());
+                    scene.playerACards.push(opponentACard.render(475+(i*30),145, opponentSprite).disableInteractive());
 
                     let opponentDCard = new Card(scene);
                     opponentDCard.setValue(scene.playerDHand[i].Value);
@@ -103,7 +103,7 @@ export default class Dealer {
                     let opponentBCard = new Card(scene);
                     opponentBCard.setValue(scene.playerBHand[i].Value);
                     opponentBCard.setSuit(scene.playerBHand[i].Suit);
-                    scene.playerBCards.push(opponentBCard.render(475+(i*30),125, opponentSprite).disableInteractive());
+                    scene.playerBCards.push(opponentBCard.render(475+(i*30),145, opponentSprite).disableInteractive());
 
                     let opponentACard = new Card(scene);
                     opponentACard.setValue(scene.playerAHand[i].Value);

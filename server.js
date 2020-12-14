@@ -8,12 +8,20 @@ const io = require("socket.io")(http, {
 });
 
 let players= [];
+let myPlayers = [];
 const suits = ['S', 'D', 'C', 'H'];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
 
+let current_turn = 0;
+let timeOut;
+let _turn = 0;
+const MAX_WAITING = 60000;
+
+
+
 function getDeck() {
-    var deck = new Array();
+    var deck = [];
     for(var i = 0; i < suits.length; i++){
         for(var x = 0; x < values.length; x++){
             var card = {Value: values[x], Suit: suits[i]};
@@ -34,9 +42,33 @@ function shuffle(deck){
     }
 }
 
+function next_turn(){
+    _turn = current_turn++ % myPlayers.length;
+    myPlayers[_turn].emit('your_turn');
+    console.log("next turn triggered " , _turn);
+    console.log("next turn triggered " , _turn);
+    triggerTimeout();
+}
+
+function triggerTimeout(){
+    timeOut = setTimeout(() => {
+        next_turn();
+    }, MAX_WAITING);
+}
+
+function resetTimeOut(){
+    if(typeof  timeOut === 'object'){
+        console.log("timeout reset");
+        clearTimeout(timeOut);
+    }
+}
+
+
+
 
 io.on('connection', function (socket) {
     console.log('A user connected: ' + socket.id);
+    myPlayers.push(socket);
     players.push(socket.id);
     const sessionID = socket.id;
 
@@ -84,8 +116,18 @@ io.on('connection', function (socket) {
         io.emit('cardPlayed', gameObject, isPlayerA);
     });
 
+    socket.on('pass_turn', function () {
+        if(myPlayers[_turn] === socket){
+            resetTimeOut();
+            next_turn();
+        }
+    });
+
     socket.on('disconnect', function () {
         console.log('A user disconnected: ' + socket.id);
+        myPlayers.splice(myPlayers.indexOf(socket), 1);
+        _turn--;
+        console.log("Numbers of players now", players.length);
         players = players.filter(player => player !== socket.id);
     });
 });

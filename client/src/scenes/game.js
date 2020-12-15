@@ -126,7 +126,7 @@ export default class Game extends Phaser .Scene {
 
 
         this.socket.on('startGame', function () {
-
+            self.socket.emit('pass_turn');
             if(self.myPlayerID === self.isPlayerA){
                 self.myPlayer = 'A';
                 leftPlayer = "Player B";
@@ -228,7 +228,38 @@ export default class Game extends Phaser .Scene {
            }
        });
 
-       this.endTurn = this.add.text(1000, 360, ['End Turn']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#170202a').setInteractive();
+
+        this.socket.on('your_turn', function () {
+            console.log("My turn");
+        });
+
+
+        function hideEndTurn() {
+            self.endTurn.disableInteractive();
+            self.endTurn.visible = false;
+        }
+
+        function showEndTurn() {
+            self.endTurn.setInteractive();
+            self.endTurn.visible = true;
+        }
+
+
+
+        this.whoseTurn = this.add.text(1000, 300, ['']).setFontSize(18).setFontFamily('Helvetica').setColor('#170202a').disableInteractive();
+
+        this.socket.on('whose_turn', function (player) {
+            self.whoseTurn.setText("Player "+player+ "'s Turn");
+            self.whoseTurn.updateText();
+            if (player === self.myPlayer){
+                showEndTurn();
+            } else {
+                hideEndTurn();
+            }
+        });
+
+
+        this.endTurn = this.add.text(1000, 360, ['End Turn']).setFontSize(18).setFontFamily('Helvetica').setColor('#170202a').setInteractive();
 
         this.endTurn.on('pointerover', function () {
             self.endTurn.setColor('#d5d8dc');

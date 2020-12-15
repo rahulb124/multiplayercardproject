@@ -46,7 +46,19 @@ function next_turn(){
     _turn = current_turn++ % myPlayers.length;
     myPlayers[_turn].emit('your_turn');
     console.log("next turn triggered " , _turn);
-    console.log("next turn triggered " , _turn);
+    switch (_turn){
+        case 0:
+            io.emit('whose_turn', 'A');
+            break;
+        case 1:
+            io.emit('whose_turn', 'B');
+            break;
+        case 2:
+            io.emit('whose_turn', 'C');
+            break;
+        case 3:
+            io.emit('whose_turn', 'D');
+    }
     triggerTimeout();
 }
 
